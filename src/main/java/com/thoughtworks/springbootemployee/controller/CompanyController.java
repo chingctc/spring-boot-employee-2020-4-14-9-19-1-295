@@ -34,6 +34,12 @@ public class CompanyController {
         return null;
     }
 
+    @GetMapping("/{id}/employees")
+    public List<Employee> getCompanyEmployees(@PathVariable int id) {
+        List<Employee> employees = getCompanyEmployeesList(id);
+        return employees;
+    }
+
     public List<Employee> getCompanyEmployeesList(int id) {
         for (Company company : this.companies) {
             if (company.getId() == id) {
