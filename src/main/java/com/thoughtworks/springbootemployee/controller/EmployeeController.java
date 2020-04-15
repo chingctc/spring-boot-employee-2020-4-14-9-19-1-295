@@ -39,17 +39,10 @@ public class EmployeeController {
         return null;
     }
 
-    @GetMapping("?page={page}&pageSize={pageSize}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int pageSize) {
-        return employees;
-    }
-
     @GetMapping("?gender={gender}")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getMaleEmployees(@PathVariable String gender) {
-//        List<Employee> employees=new ArrayList<>();
-            return getEmployeeWithGender(gender);
+        return getEmployeeWithGender(gender);
     }
 
     public List<Employee> getEmployeeWithGender(String gender) {
@@ -99,5 +92,20 @@ public class EmployeeController {
             }
         }
         return employees;
+    }
+
+    @GetMapping("?page={page}&pageSize={pageSize}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Employee> getEmployeesByPage(@PathVariable int page, @PathVariable int pageSize) {
+        return getPage(page, pageSize);
+    }
+
+    public List<Employee> getPage(int page, int pageSize) {
+        List<Employee> result = new ArrayList<>();
+        int maxsize = Math.min((page * pageSize), this.employees.size());
+        for (int i = (page - 1) * pageSize; i < maxsize; i++) {
+            result.add(this.employees.get(i));
+        }
+        return result;
     }
 }
