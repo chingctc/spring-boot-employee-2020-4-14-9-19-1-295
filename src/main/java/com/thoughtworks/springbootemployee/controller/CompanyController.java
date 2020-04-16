@@ -27,27 +27,27 @@ public class CompanyController {
         return companies;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getCompany(@PathVariable int id) {
+    public Object getCompany(@PathVariable int companyId) {
         for (Company company : this.companies) {
-            if (company.getId() == id) {
+            if (company.getId() == companyId) {
                 return company;
             }
         }
         return null;
     }
 
-    @GetMapping("/{id}/employees")
+    @GetMapping("/{companyId}/employees")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getCompanyEmployees(@PathVariable int id) {
-        List<Employee> employees = getCompanyEmployeesList(id);
+    public List<Employee> getCompanyEmployees(@PathVariable int companyId) {
+        List<Employee> employees = getCompanyEmployeesList(companyId);
         return employees;
     }
 
-    public List<Employee> getCompanyEmployeesList(int id) {
+    public List<Employee> getCompanyEmployeesList(int companyId) {
         for (Company company : this.companies) {
-            if (company.getId() == id) {
+            if (company.getId() == companyId) {
                 return company.getEmployees();
             }
         }
@@ -62,7 +62,7 @@ public class CompanyController {
 
     public List<Company> getPage(int page, int pageSize) {
         List<Company> result = new ArrayList<>();
-        int maxsize = ((page * pageSize) < this.companies.size()) ? (page * pageSize) : this.companies.size();
+        int maxsize = Math.min((page * pageSize), this.companies.size());
         for (int i = (page - 1) * pageSize; i < maxsize; i++) {
             result.add(this.companies.get(i));
         }
@@ -76,11 +76,11 @@ public class CompanyController {
         return company;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Company deleteCompany(@PathVariable int id) {
+    public Company deleteCompany(@PathVariable int companyId) {
         for (Company company : this.companies) {
-            if (company.getId() == id) {
+            if (company.getId() == companyId) {
                 this.companies.remove(company);
                 return company;
             }
@@ -88,11 +88,11 @@ public class CompanyController {
         return null;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Company put(@PathVariable int id, @RequestBody Company company) {
+    public Company put(@PathVariable int companyId, @RequestBody Company company) {
         for (Company updateCompany : this.companies) {
-            if (updateCompany.getId() == id) {
+            if (updateCompany.getId() == companyId) {
                 updateCompany.setCompanyName(company.getCompanyName());
                 updateCompany.setEmployeesNumber(company.getEmployeesNumber());
                 updateCompany.setEmployees(company.getEmployees());
