@@ -103,7 +103,7 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void shouldUpdateEmployee() {
+    public void shouldUpdateCompany() {
         Company company = new Company("NewCompany6", 200, Collections.singletonList(new Employee(6, "Xiaogang", 20, "Male", 2000)), 6);
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .body(company)
@@ -113,7 +113,9 @@ public class CompanyControllerTest {
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
 
         String name = response.jsonPath().getString("companyName");
+        int employeesNumber = response.jsonPath().getInt("employeeNumber[0]");
         Assert.assertEquals("NewCompany6",name);
+        Assert.assertEquals(200,employeesNumber);
     }
 
     @Test
