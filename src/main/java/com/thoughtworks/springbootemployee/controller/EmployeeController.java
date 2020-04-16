@@ -2,11 +2,13 @@ package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.thoughtworks.springbootemployee.data.EmployeeData.getTestEmployees;
 
 @RestController
 @RequestMapping("/employees")
@@ -16,12 +18,7 @@ public class EmployeeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllEmployees() {
-        employees.add(new Employee(0, "Xiaoming", 20, "Male", 1000));
-        employees.add(new Employee(1, "Xiaohong", 19, "Female", 1000));
-        employees.add(new Employee(2, "Xiaozhi", 15, "Male", 2000));
-        employees.add(new Employee(3, "Xiaogang", 16, "Male", 2000));
-        employees.add(new Employee(4, "Xiaoxia", 15, "Female", 3000));
-        return employees;
+        return getTestEmployees();
     }
 
     @GetMapping("/{employeeId}")
@@ -39,20 +36,10 @@ public class EmployeeController {
         return null;
     }
 
-    @GetMapping("?gender={gender}")
+    @GetMapping(value = "", params = {"gender"})
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getMaleEmployees(@PathVariable String gender) {
-        return getEmployeeWithGender(gender);
-    }
-
-    public List<Employee> getEmployeeWithGender(String gender) {
-        List<Employee> result = new ArrayList<>();
-        for (Employee employee : this.employees) {
-            if (employee.getGender().equals(gender)) {
-                result.add(employee);
-            }
-        }
-        return result;
+    public List<Employee> getMaleEmployees(@RequestParam String gender) {
+        return getTestEmployees().stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
 
     @PostMapping
@@ -87,25 +74,26 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> deleteEmployee(@PathVariable int employeeId) {
         for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getId().equals(employeeId)) {
+            if (employees.get(i).getId() == employeeId) {
                 this.employees.remove(i);
             }
         }
         return employees;
     }
 
-    @GetMapping("?page={page}&pageSize={pageSize}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getEmployeesByPage(@PathVariable int page, @PathVariable int pageSize) {
-        return getPage(page, pageSize);
-    }
+//    @GetMapping("?page={page}&pageSize={pageSize}")
+//    @GetMapping(value = "", params = {"page", "pageSize"})
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int pageSize) {
+//        return getPage(page, pageSize);
+//    }
 
-    public List<Employee> getPage(int page, int pageSize) {
-        List<Employee> result = new ArrayList<>();
-        int maxsize = Math.min((page * pageSize), this.employees.size());
-        for (int i = (page - 1) * pageSize; i < maxsize; i++) {
-            result.add(this.employees.get(i));
-        }
-        return result;
-    }
+//    public List<Employee> getPage(int page, int pageSize) {
+//        List<Employee> result = new ArrayList<>();
+//        int maxsize = Math.min((page * pageSize), getTestEmployees.size());
+//        for (int i = (page - 1) * pageSize; i < maxsize; i++) {
+//            result.add(this.employees.get(i));
+//        }
+//        return result;
+//    }
 }
