@@ -2,6 +2,7 @@ package com.thoughtworks.springbootemployee;
 
 import com.thoughtworks.springbootemployee.controller.EmployeeController;
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.service.EmployeeService;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
@@ -24,17 +26,19 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringBootEmployeeApplicationTests {
+public class EmployeeControllerTests {
 
     @Autowired
     private EmployeeController employeeController;
+    private EmployeeService employeeService;
+
 
     @Before
     public void setUp() throws Exception {
         RestAssuredMockMvc.standaloneSetup(employeeController);
     }
 
-    @Test
+    @Test // DONE
     public void shouldFindEmployeeById() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .when()
@@ -50,16 +54,20 @@ public class SpringBootEmployeeApplicationTests {
         Assert.assertEquals(1000, employee.getSalary());
     }
 
-    @Test
-    public void shouldFindEmployee() {
-        Employee employee = new Employee();
-        employee.setName("XX");
+    @Test // TODO:FIX BUG
+    public void shouldAddEmployee() {
+        Employee employee = new Employee(5, "NewName", 20, "Male", 1000);
+//        employee.setId(6);
+//        employee.setName("XX");
+//        employee.setGender("Male");
+//        employee.setSalary(3000);
+//        employee.setAge(30);
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .body(employee)
                 .when()
                 .post("/employees");
 
-        Assert.assertEquals(HttpStatus.CREATED.value(), response.getStatusCode());
+        Assert.assertEquals(201, response.getStatusCode());
 
         List<Employee> employees = response.getBody().as(new TypeRef<List<Employee>>() {
             @Override
@@ -72,7 +80,7 @@ public class SpringBootEmployeeApplicationTests {
         Assert.assertEquals("XX", employees.get(6).getName());
     }
 
-    @Test
+    @Test // DONE
     public void shouldFindEmployeeByGender() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .params("gender", "" + "Male")
@@ -93,30 +101,25 @@ public class SpringBootEmployeeApplicationTests {
         Assert.assertEquals("Xiaogang", employees.get(2).getName());
     }
 
-    @Test
+    @Test // TODO: FIX BUG
     public void shouldUpdateEmployee() {
         Employee employee = new Employee();
         employee.setName("NewName");
-        employee.setAge(30);
         MockMvcResponse response = given().contentType(ContentType.JSON)
-                .body(employee)
                 .when()
-                .put("/employees/4");
+                .put("/employees/1");
 
-        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+//        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
 
-        List<Employee> employees = response.getBody().as(new TypeRef<List<Employee>>() {
-            @Override
-            public Type getType() {
-                return super.getType();
-            }
-        });
-        Assert.assertEquals(5, employees.size());
-        Assert.assertEquals("NewName", employees.get(5).getName());
-        Assert.assertEquals(30, employees.get(5).getAge());
+        Employee employees = response.getBody().as(Employee.class);
+        Assert.assertEquals(1, employees.getId());
+        Assert.assertEquals("NewName", employees.getName());
+        Assert.assertEquals(19, employees.getAge());
+        Assert.assertEquals("Female", employees.getGender());
+        Assert.assertEquals(1000, employees.getSalary());
     }
 
-    @Test
+    @Test // DONE
     public void shouldRemoveEmployee() {
         Employee employee = new Employee();
         MockMvcResponse response = given().contentType(ContentType.JSON)
