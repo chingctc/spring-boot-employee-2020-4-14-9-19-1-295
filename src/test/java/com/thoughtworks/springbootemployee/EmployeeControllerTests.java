@@ -7,6 +7,7 @@ import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
+import static sun.nio.cs.Surrogate.is;
 
 
 @RunWith(SpringRunner.class)
@@ -39,7 +41,7 @@ public class EmployeeControllerTests {
         RestAssuredMockMvc.standaloneSetup(employeeController);
     }
 
-    @Test // DONE
+    @Test
     public void shouldFindEmployeeById() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .when()
@@ -55,33 +57,21 @@ public class EmployeeControllerTests {
         Assert.assertEquals(1000, employee.getSalary());
     }
 
-    @Test // TODO:FIX BUG
+    @Test
     public void shouldAddEmployee() {
         Employee employee = new Employee(5, "NewName", 20, "Male", 1000);
-//        employee.setId(6);
-//        employee.setName("XX");
-//        employee.setGender("Male");
-//        employee.setSalary(3000);
-//        employee.setAge(30);
-        MockMvcResponse response = given().contentType(ContentType.JSON)
+        MockMvcResponse response = (MockMvcResponse) given().contentType(ContentType.JSON)
                 .body(employee)
                 .when()
                 .post("/employees");
 
         Assert.assertEquals(201, response.getStatusCode());
 
-        List<Employee> employees = response.getBody().as(new TypeRef<List<Employee>>() {
-            @Override
-            public Type getType() {
-                return super.getType();
-            }
-        });
-        Assert.assertEquals(5, employees.size());
-        Assert.assertEquals("Xiaoming", employees.get(0).getName());
-        Assert.assertEquals("XX", employees.get(6).getName());
+        String name = response.jsonPath().getString("name");
+        Assert.assertEquals("NewName",name);
     }
 
-    @Test // DONE
+    @Test
     public void shouldFindEmployeeByGender() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .params("gender", "Male")
@@ -131,7 +121,7 @@ public class EmployeeControllerTests {
         Assert.assertEquals(1000, employees.getSalary());
     }
 
-    @Test // DONE
+    @Test 
     public void shouldRemoveEmployee() {
         Employee employee = new Employee();
         MockMvcResponse response = given().contentType(ContentType.JSON)

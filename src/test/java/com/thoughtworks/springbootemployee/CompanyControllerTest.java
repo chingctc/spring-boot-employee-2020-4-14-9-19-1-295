@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
@@ -41,7 +42,7 @@ public class CompanyControllerTest {
         RestAssuredMockMvc.standaloneSetup(companyController);
     }
 
-    @Test // DONE
+    @Test
     public void shouldFindCompanyById() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .when()
@@ -56,7 +57,7 @@ public class CompanyControllerTest {
         Assert.assertEquals(200, company.getEmployeesNumber());
     }
 
-    @Test // DONE
+    @Test
     public void shouldRemoveCompany() {
         Company company = new Company();
         MockMvcResponse response = given().contentType(ContentType.JSON)
@@ -85,5 +86,19 @@ public class CompanyControllerTest {
 
         List<Employee> jsonResult = response.jsonPath().getList("$");
         Assert.assertEquals(3,jsonResult.size());
+    }
+
+    @Test
+    public void shouldAddCompany() {
+        Company company = new Company("NewCompany", 250, Collections.singletonList(new Employee(7, "NewEmployee", 25, "Male", 2500)), 7);
+        MockMvcResponse response = (MockMvcResponse) given().contentType(ContentType.JSON)
+                .body(company)
+                .when()
+                .post("/companies");
+
+        Assert.assertEquals(201, response.getStatusCode());
+
+        String name = response.jsonPath().getString("companyName");
+        Assert.assertEquals("NewCompany",name);
     }
 }
