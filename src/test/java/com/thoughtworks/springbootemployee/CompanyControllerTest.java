@@ -75,4 +75,15 @@ public class CompanyControllerTest {
                 });
         Assert.assertEquals(5, companies.size());
     }
+
+    @Test
+    public void shouldDisplayCompanyWithPageSize() {
+        MockMvcResponse response = given().contentType(ContentType.JSON)
+                .params("page", "1", "pageSize", "3")
+                .when()
+                .get("/companies");
+
+        List<Employee> jsonResult = response.jsonPath().getList("$");
+        Assert.assertEquals(3,jsonResult.size());
+    }
 }

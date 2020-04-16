@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @RunWith(SpringRunner.class)
@@ -83,7 +84,7 @@ public class EmployeeControllerTests {
     @Test // DONE
     public void shouldFindEmployeeByGender() {
         MockMvcResponse response = given().contentType(ContentType.JSON)
-                .params("gender", "" + "Male")
+                .params("gender", "Male")
                 .when()
                 .get("/employees");
 
@@ -99,6 +100,17 @@ public class EmployeeControllerTests {
         Assert.assertEquals("Xiaoming", employees.get(0).getName());
         Assert.assertEquals("Xiaozhi", employees.get(1).getName());
         Assert.assertEquals("Xiaogang", employees.get(2).getName());
+    }
+
+    @Test
+    public void shouldDisplayEmployeeWithPageSize() {
+        MockMvcResponse response = given().contentType(ContentType.JSON)
+                .params("page", "0", "pageSize", "3")
+                .when()
+                .get("/employees");
+
+        List<Employee> jsonResult = response.jsonPath().getList("$");
+        Assert.assertEquals(3,jsonResult.size());
     }
 
     @Test // TODO: FIX BUG
