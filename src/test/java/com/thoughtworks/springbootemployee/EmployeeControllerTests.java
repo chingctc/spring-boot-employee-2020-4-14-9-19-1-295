@@ -103,25 +103,21 @@ public class EmployeeControllerTests {
         Assert.assertEquals(3,jsonResult.size());
     }
 
-    @Test // TODO: FIX BUG
+    @Test
     public void shouldUpdateEmployee() {
-        Employee employee = new Employee();
-        employee.setName("NewName");
+        Employee employee = new Employee(1,"NewEmployee1", 19, "Female", 1000);
         MockMvcResponse response = given().contentType(ContentType.JSON)
+                .body(employee)
                 .when()
                 .put("/employees/1");
 
-//        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
 
-        Employee employees = response.getBody().as(Employee.class);
-        Assert.assertEquals(1, employees.getId());
-        Assert.assertEquals("NewName", employees.getName());
-        Assert.assertEquals(19, employees.getAge());
-        Assert.assertEquals("Female", employees.getGender());
-        Assert.assertEquals(1000, employees.getSalary());
+        String name = response.jsonPath().getString("name");
+        Assert.assertEquals("NewEmployee1",name);
     }
 
-    @Test 
+    @Test
     public void shouldRemoveEmployee() {
         Employee employee = new Employee();
         MockMvcResponse response = given().contentType(ContentType.JSON)

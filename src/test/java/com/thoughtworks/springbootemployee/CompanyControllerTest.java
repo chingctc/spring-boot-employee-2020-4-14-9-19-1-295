@@ -101,4 +101,36 @@ public class CompanyControllerTest {
         String name = response.jsonPath().getString("companyName");
         Assert.assertEquals("NewCompany",name);
     }
+
+    @Test
+    public void shouldUpdateEmployee() {
+        Company company = new Company("NewCompany6", 200, Collections.singletonList(new Employee(6, "Xiaogang", 20, "Male", 2000)), 6);
+        MockMvcResponse response = given().contentType(ContentType.JSON)
+                .body(company)
+                .when()
+                .put("/companies/6");
+
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        String name = response.jsonPath().getString("companyName");
+        Assert.assertEquals("NewCompany6",name);
+    }
+
+    @Test
+    public void shouldReturnEmployeeListOfCompany() {
+        MockMvcResponse response = given().contentType(ContentType.JSON)
+                .when()
+                .get("/companies/6/employees");
+
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        String name = response.jsonPath().getString("name[0]");
+        int salary = response.jsonPath().getInt("salary[0]");
+        String gender = response.jsonPath().getString("gender[0]");
+        int age = response.jsonPath().getInt("age[0]");
+        Assert.assertEquals("Xiaogang",name);
+        Assert.assertEquals(2000,salary);
+        Assert.assertEquals("Male",gender);
+        Assert.assertEquals(20,age);
+    }
 }
