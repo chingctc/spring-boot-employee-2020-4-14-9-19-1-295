@@ -25,7 +25,6 @@ public class EmployeeService {
     }
 
     public List<Employee> getByGender(String gender) {
-//        return employeeRepository.findByGender(gender);
         return employeeRepository.findAllByGender(gender);
     }
 
@@ -36,7 +35,6 @@ public class EmployeeService {
     public void delete(Integer employeeId) {
         employeeRepository.deleteById(employeeId);
     }
-
 
     public Employee update(int employeeId, Employee employee) {
         Employee existingEmployee = employeeRepository.findById(employeeId).orElse(null);
@@ -51,7 +49,4 @@ public class EmployeeService {
         return employeeRepository.save(existingEmployee);
     }
 
-//    public List<Employee> getEmployeesByPage(int page, int pageSize) {
-//        return employeeRepository.findByPage(page, pageSize);
-//    }
 }

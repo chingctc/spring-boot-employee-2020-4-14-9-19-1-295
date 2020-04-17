@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
-
-    List<Employee> findAllEmployeesByCompanyId(Company existingCompany);
     Optional<Company> findById(Integer companyId);
 }

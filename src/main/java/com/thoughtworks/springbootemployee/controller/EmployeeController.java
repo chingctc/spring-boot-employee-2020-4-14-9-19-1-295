@@ -14,6 +14,10 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    public EmployeeController(EmployeeService employeeService){
+        this.employeeService = employeeService;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllEmployees() {

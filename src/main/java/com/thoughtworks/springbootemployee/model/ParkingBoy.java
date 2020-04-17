@@ -18,8 +18,9 @@ public class ParkingBoy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nickname;
+    private Integer employeeId;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "employeeId")
     private Employee employee;
 }

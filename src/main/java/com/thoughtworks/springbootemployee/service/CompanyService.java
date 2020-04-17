@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -57,12 +56,4 @@ public class CompanyService {
         }
         return null;
     }
-
-//    public List<Company> getCompanyByPage(int page, int pageSize){
-//        return companyRepository.findAll()
-//                .stream()
-//                .skip(page * pageSize)
-//                .limit(pageSize)
-//                .collect(Collectors.toList());
-//    }
 }
