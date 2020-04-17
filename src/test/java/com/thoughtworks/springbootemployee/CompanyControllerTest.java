@@ -1,11 +1,9 @@
 package com.thoughtworks.springbootemployee;
 
 import com.thoughtworks.springbootemployee.controller.CompanyController;
-import com.thoughtworks.springbootemployee.controller.EmployeeController;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
-import com.thoughtworks.springbootemployee.service.EmployeeService;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -24,9 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-
-//import org.springframework.cloud.contract.spec.internal.HttpStatus;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -85,7 +80,7 @@ public class CompanyControllerTest {
                 .get("/companies");
 
         List<Employee> jsonResult = response.jsonPath().getList("$");
-        Assert.assertEquals(3,jsonResult.size());
+        Assert.assertEquals(3, jsonResult.size());
     }
 
     @Test
@@ -99,7 +94,7 @@ public class CompanyControllerTest {
         Assert.assertEquals(201, response.getStatusCode());
 
         String name = response.jsonPath().getString("companyName");
-        Assert.assertEquals("NewCompany",name);
+        Assert.assertEquals("NewCompany", name);
     }
 
     @Test
@@ -114,8 +109,8 @@ public class CompanyControllerTest {
 
         String name = response.jsonPath().getString("companyName");
         int employeesNumber = response.jsonPath().getInt("employeeNumber[0]");
-        Assert.assertEquals("NewCompany6",name);
-        Assert.assertEquals(200,employeesNumber);
+        Assert.assertEquals("NewCompany6", name);
+        Assert.assertEquals(200, employeesNumber);
     }
 
     @Test
@@ -130,9 +125,9 @@ public class CompanyControllerTest {
         int salary = response.jsonPath().getInt("salary[0]");
         String gender = response.jsonPath().getString("gender[0]");
         int age = response.jsonPath().getInt("age[0]");
-        Assert.assertEquals("Xiaogang",name);
-        Assert.assertEquals(2000,salary);
-        Assert.assertEquals("Male",gender);
-        Assert.assertEquals(20,age);
+        Assert.assertEquals("Xiaogang", name);
+        Assert.assertEquals(2000, salary);
+        Assert.assertEquals("Male", gender);
+        Assert.assertEquals(20, age);
     }
 }

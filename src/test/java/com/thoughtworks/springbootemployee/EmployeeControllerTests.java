@@ -7,25 +7,19 @@ import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.cloud.contract.spec.internal.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.hamcrest.Matchers.*;
-import static sun.nio.cs.Surrogate.is;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -68,7 +62,7 @@ public class EmployeeControllerTests {
         Assert.assertEquals(201, response.getStatusCode());
 
         String name = response.jsonPath().getString("name");
-        Assert.assertEquals("NewName",name);
+        Assert.assertEquals("NewName", name);
     }
 
     @Test
@@ -100,12 +94,12 @@ public class EmployeeControllerTests {
                 .get("/employees");
 
         List<Employee> jsonResult = response.jsonPath().getList("$");
-        Assert.assertEquals(3,jsonResult.size());
+        Assert.assertEquals(3, jsonResult.size());
     }
 
     @Test
     public void shouldUpdateEmployee() {
-        Employee employee = new Employee(1,"NewEmployee1", 19, "Female", 1000);
+        Employee employee = new Employee(1, "NewEmployee1", 19, "Female", 1000);
         MockMvcResponse response = given().contentType(ContentType.JSON)
                 .body(employee)
                 .when()
@@ -114,7 +108,7 @@ public class EmployeeControllerTests {
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
 
         String name = response.jsonPath().getString("name");
-        Assert.assertEquals("NewEmployee1",name);
+        Assert.assertEquals("NewEmployee1", name);
     }
 
     @Test
