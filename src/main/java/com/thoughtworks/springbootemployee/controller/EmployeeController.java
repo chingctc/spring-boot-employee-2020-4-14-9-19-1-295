@@ -32,6 +32,12 @@ public class EmployeeController {
         return employeeService.getByGender(gender);
     }
 
+    @GetMapping(value = "", params = {"page", "pageSize"})
+    @ResponseStatus(HttpStatus.OK)
+    public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int pageSize) {
+        return employeeService.getAll(page, pageSize);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Employee createEmployee(@RequestBody Employee employee) {
@@ -44,17 +50,11 @@ public class EmployeeController {
         return employeeService.update(employeeId, employee);
     }
 
-
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> deleteEmployee(@PathVariable int employeeId) {
-        return employeeService.delete(employeeId);
+    public void deleteEmployee(@PathVariable int employeeId) {
+        employeeService.delete(employeeId);
     }
 
-    @GetMapping(value = "", params = {"page", "pageSize"})
-    @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int pageSize) {
-        return employeeService.getEmployeesByPage(page, pageSize);
-    }
 
 }

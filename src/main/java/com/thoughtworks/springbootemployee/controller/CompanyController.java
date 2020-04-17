@@ -38,7 +38,7 @@ public class CompanyController {
     @GetMapping(value = "", params={"page","pageSize"})
     @ResponseStatus(HttpStatus.OK)
     public List<Company> getCompanyListByPage(@RequestParam int page, @RequestParam int pageSize) {
-        return companyService.getCompanyByPage(page, pageSize);
+        return companyService.getAll(page, pageSize);
     }
 
     @PostMapping
@@ -49,8 +49,8 @@ public class CompanyController {
 
     @DeleteMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Company> deleteCompany(@PathVariable int companyId) {
-        return companyService.delete(companyId);
+    public void deleteCompany(@PathVariable int companyId) {
+        companyService.delete(companyId);
     }
 
     @PutMapping("/{companyId}")

@@ -1,58 +1,26 @@
 package com.thoughtworks.springbootemployee.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class Company {
-    private static int counter = 1;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer companyId;
     private String companyName;
-    private int employeesNumber;
+    private Integer employeesNumber;
+
+    @OneToMany(targetEntity = Employee.class, mappedBy = "companyId", fetch = FetchType.EAGER)
     private List<Employee> employees;
-    private int id;
 
-    public Company() {
-        this.id = counter++;
-    }
-
-    public Company(String companyName, int employeesNumber, List<Employee> employees, int id) {
-        this.companyName = companyName;
-        this.employeesNumber = employeesNumber;
-        this.employees = employees;
-        this.id = counter++;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public int getEmployeesNumber() {
-        return employeesNumber;
-    }
-
-    public void setEmployeesNumber(int employeesNumber) {
-        this.employeesNumber = employeesNumber;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public static void setCounter(int counter) {
-        Company.counter = counter;
-    }
 }
